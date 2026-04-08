@@ -11,12 +11,14 @@ try:
 	FAN_MAX_TEMP=config["FAN_MAX_TEMP"]
 	UPDATE_INTERVAL=config["UPDATE_INTERVAL"]
 	MAX_PERF=config["MAX_PERF"]
+	MIN_SPD_DELTA=config["MIN_SPD_DELTA"]
 except:
 	print("error loading /etc/automagic-fan/config.json.\nPlease check your config file.\nProceeding with default settings.")
 	FAN_OFF_TEMP=20
 	FAN_MAX_TEMP=50
 	UPDATE_INTERVAL=2
 	MAX_PERF=0
+	MIN_SPD_DELTA=0
 
 if MAX_PERF>0:
 	print("Maximizing clock speeds with jetson_clocks")
@@ -45,7 +47,7 @@ last_spd=-1
 while True:
 	temp=read_temp()
 	spd=fan_curve(temp)
-	if spd!=last_spd:
+	if last_spd<0 or abs(spd-last_spd)>=MIN_SPD_DELTA:
 		set_speed(spd)
 		last_spd=spd
 	time.sleep(UPDATE_INTERVAL)

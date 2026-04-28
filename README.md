@@ -41,12 +41,16 @@ you will find the following lines:
     "FAN_MAX_TEMP":50,
     "UPDATE_INTERVAL":2,
     "MAX_PERF":1,
-    "MIN_SPD_DELTA":0
+    "MIN_SPD_DELTA":0,
+    "TEMP_ZONE":"thermal_zone0"
     }
 
 <code>FAN_OFF_TEMP</code> is the temperature (°C) below which the fan is turned off.  
 <code>FAN_MAX_TEMP</code> is the temperature (°C) above which the fan is at 100% speed.  
 The script interpolates linearly between these two points.
+
+You can use either integers (like 20) or floating point numbers (like 20.125) in each of these fields.  
+The temperature precision of the thermal sensors is 0.5 (°C), so don't expect this to be too precise.
 
 <code>UPDATE_INTERVAL</code> tells the script how often to update the fan speed (in seconds).  
 <code>MAX_PERF</code> values greater than 0 maximize system performance by setting the CPU and GPU clock speeds to the maximum. 
@@ -54,8 +58,11 @@ The script interpolates linearly between these two points.
 <code>MIN_SPD_DELTA</code> sets the minimum change in fan speed (PWM value, 0-255) required before updating the fan speed.  
 A value of 0 disables this behavior (default).  
 
-You can use either integers (like 20) or floating point numbers (like 20.125) in each of these fields.  
-The temperature precision of the thermal sensors is 0.5 (°C), so don't expect this to be too precise.
+<code>TEMP_ZONE</code> selects which thermal zone is used for temperature readings.  
+
+You can list available zones and their types with:
+
+    cat /sys/devices/virtual/thermal/thermal_zone*/type
 
 Any changes in the script will be will be applied after the next reboot.  
 You can run

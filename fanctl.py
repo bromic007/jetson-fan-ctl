@@ -12,13 +12,15 @@ try:
 	UPDATE_INTERVAL=config["UPDATE_INTERVAL"]
 	MAX_PERF=config["MAX_PERF"]
 	MIN_SPD_DELTA=config["MIN_SPD_DELTA"]
-except:
+	TEMP_ZONE=config["TEMP_ZONE"]
+except Exception:
 	print("error loading /etc/automagic-fan/config.json.\nPlease check your config file.\nProceeding with default settings.")
 	FAN_OFF_TEMP=20
 	FAN_MAX_TEMP=50
 	UPDATE_INTERVAL=2
 	MAX_PERF=0
 	MIN_SPD_DELTA=0
+	TEMP_ZONE="thermal_zone0"
 
 if MAX_PERF>0:
 	print("Maximizing clock speeds with jetson_clocks")
@@ -29,7 +31,7 @@ if MAX_PERF>0:
 
 
 def read_temp():
-	with open("/sys/devices/virtual/thermal/thermal_zone0/temp","r") as file:
+	with open(f"/sys/devices/virtual/thermal/{TEMP_ZONE}/temp", "r") as file:
 		temp_raw=file.read()
 	temp=int(temp_raw)/1000
 	return temp
